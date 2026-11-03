@@ -299,6 +299,18 @@ const ET = (() => {
     if (dur >= c.orange && !nearEnd) return { lvl: 'orange', dur: Math.floor(dur) };
     return { lvl: 'ok' };
   }
+  // Départ simulé depuis e-Trace (bouton d'essai, version bêta) : faute de pilote en piste publié par le PC course,
+  // un téléphone en « départ simulé » tient lieu de pilote en piste, pour tester les alertes sans course.
+  const simSeen = new Map();
+  function effTrk(trk, traces, now = Date.now()) {
+    if (trk && trk.status === 'run' && trk.bib) return trk;
+    let best = null;
+    for (const T of traces) if (T && T.sim && T.armed && T.run && (now - (T._got || 0)) / 1000 < 120 && (!best || (T.t || 0) > (best.t || 0))) best = T;
+    if (!best) return trk;
+    const k = best.bib + '|' + best.run; if (!simSeen.has(k)) simSeen.set(k, best._got || now);
+    return { status: 'run', bib: String(best.bib), name: best.name || '', startAt: best.run, _got: simSeen.get(k), sim: true };
+  }
+  const BETA = 'Version bêta de test · à remplacer avant la première épreuve 2027';
   const COL = { orange: '#e07a00', red: '#b3261e', lost: '#6a4fc4', ok: '#1d7a3a' };
   const LBL = { orange: 'Arrêté', red: 'Arrêt prolongé', lost: 'Position perdue' };
 
@@ -338,7 +350,7 @@ const ET = (() => {
     if (fixes.length < 2) return null;
     return build(fixes, [{ k: 'dep', t: 0 }, { k: 'arr', t: (fixes.length - 1) * 1000 }]);
   }
-  return { DEF, cfg, dist, prep, locate, where, at, svg, alertState, COL, LBL, build, fromGpx, km };
+  return { BETA, effTrk, DEF, cfg, dist, prep, locate, where, at, svg, alertState, COL, LBL, build, fromGpx, km };
 })();
 
 </script>
@@ -472,13 +484,20 @@ function subTrace() {
 function unsubTrace() { [trSub, refSub, evCfgSub].forEach(u => { try { u && u(); } catch (e) {} }); trSub = refSub = evCfgSub = null; TR = new Map(); refDoc = null; refPr = null; }
 // téléphone e-Trace du pilote n° bib (le plus récent s'il y en a plusieurs)
 function traceOf(bib) { let b = null; for (const t of TR.values()) if (String(t.bib) === String(bib) && (!b || (t.t || 0) > (b.t || 0))) b = t; return b; }
+// pilote en piste vu par e-Trace : celui publié par le PC course, sinon un départ simulé (essai, version bêta)
+function etTrk() { return ET.effTrk(trk, TR.values()); }
+function etRun() { const t = etTrk(); return t && t.status === 'run' && t.bib ? String(t.bib) : null; }
 function alertNow() {
-  const run = trackRun();
+  const t = etTrk(), run = etRun();
   if (!run) return null;
-  const T = traceOf(run), a = ET.alertState(trk, T, refPr, ETC);
-  return a ? { ...a, bib: run, T, key: run + '|' + trk.startAt } : null;
+  const T = traceOf(run), a = ET.alertState(t, T, refPr, ETC);
+  return a ? { ...a, bib: run, T, key: run + '|' + t.startAt, sim: !!t.sim, name: t.name || '' } : null;
 }
 function alertText(a) {
+  const where = a.T && refPr && Number.isFinite(a.T.d) ? ET.where(refPr, a.T.d) : '';
+  const r = alertText0(a); if (r && a.sim) r.t = 'Essai · ' + r.t; return r;
+}
+function alertText0(a) {
   const where = a.T && refPr && Number.isFinite(a.T.d) ? ET.where(refPr, a.T.d) : '';
   if (a.lvl === 'lost') return { t: 'Position perdue', s: `aucune position depuis ${a.age || '?'} s${where ? ' · dernière : ' + where : ''}` };
   if (a.lvl === 'red') return { t: `Arrêt prolongé · ${a.dur} s`, s: where || 'position sur le plan' };
@@ -493,12 +512,12 @@ function alertBanner() {
 }
 function ackAlert() { const a = alertNow(); if (a) seenAck = a.key + '|' + a.lvl; render(); }
 function pisteHTML() {
-  const run = trackRun(), a = alertNow(), now = Date.now();
+  const run = etRun(), a = alertNow(), now = Date.now(), tt = etTrk() || {};
   let head;
   if (!run) head = `<div class="etcard"><b class="etbig">Piste libre</b><small>Le suivi démarre seul au départ chronométré du pilote suivant.</small></div>`;
-  else if (a && a.lvl === 'none') head = `<div class="etcard"><b class="etbig">En piste : n° ${esc(run)} ${esc(lastName(trk.name))}</b><small>Ce pilote n'a pas e-Trace : pas de suivi de position.</small></div>`;
+  else if (a && a.lvl === 'none') head = `<div class="etcard"><b class="etbig">En piste : n° ${esc(run)} ${esc(lastName(tt.name))}</b><small>Ce pilote n'a pas e-Trace : pas de suivi de position.</small></div>`;
   else if (a && alertText(a)) { const x = alertText(a); head = `<div class="etcard al" style="--c:${ET.COL[a.lvl]}"><b class="etn">${esc(run)}</b><span><b class="etbig">${esc(x.t)}</b><small>${esc(x.s)}</small></span></div>`; }
-  else head = `<div class="etcard"><b class="etbig" style="color:${ET.COL.ok}">En piste : n° ${esc(run)} ${esc(lastName(trk.name))}</b><small>Suivi actif${a && a.T && refPr && Number.isFinite(a.T.d) ? ' · ' + esc(ET.where(refPr, a.T.d)) : ''}</small></div>`;
+  else head = `<div class="etcard"><b class="etbig" style="color:${ET.COL.ok}">${tt.sim ? 'Essai · ' : ''}En piste : n° ${esc(run)} ${esc(lastName(tt.name))}</b><small>${tt.sim ? 'Départ simulé depuis e-Trace · ' : ''}Suivi actif${a && a.T && refPr && Number.isFinite(a.T.d) ? ' · ' + esc(ET.where(refPr, a.T.d)) : ''}</small></div>`;
   const dots = [];
   if (run && a && a.T) dots.push({ lat: a.T.lat, lng: a.T.lng, color: ET.COL[a.lvl] || ET.COL.ok, label: 'N° ' + run, pulse: a.lvl !== 'ok' });
   const dark = matchMedia('(prefers-color-scheme: dark)').matches;
@@ -511,7 +530,7 @@ function pisteHTML() {
   }).join('');
   return head + `<div class="etplan">${ET.svg(refPr, dots, th)}</div>` + rowsH
     + `<div class="sect">Téléphones e-Trace <small>${TR.size} pilote(s) volontaire(s)</small></div><div class="etphs">${phones || '<span class="wait">Aucun téléphone e-Trace accepté pour cette épreuve.</span>'}</div>`
-    + `<p class="hint">Orange dès ${ETC.orange} s d'arrêt · rouge à ${ETC.red} s · violet si position perdue (${ETC.lost} s sans donnée). Aucune sonnerie.</p>`;
+    + `<p class="hint">Orange dès ${ETC.orange} s d'arrêt · rouge à ${ETC.red} s · violet si position perdue (${ETC.lost} s sans donnée). Aucune sonnerie.<br><b style="color:#6a4fc4">e-Trace · ${esc(ET.BETA)}</b></p>`;
 }
 
 /* ---------------- Voiture 0 : enregistrement du tracé de référence ---------------- */
