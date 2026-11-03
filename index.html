@@ -92,6 +92,8 @@
   .v0l { display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; align-items: center; font-size: .92rem; padding: 2px 0; }
   .v0l input { padding: 5px 8px; font-size: .95rem; } .v0c { width: 20px; height: 20px; border-radius: 50%; background: var(--flag); color: #fff; font-size: .62rem; font-weight: 800; display: grid; place-items: center; }
   .v0c.sq { border-radius: 4px; background: none; border: 2px solid var(--muted); width: 14px; height: 14px; margin-left: 3px; } .v0c.ln { background: none; border-top: 3px dashed var(--fg); border-radius: 0; height: 0; }
+  .v0l.pt { grid-template-columns: 22px auto 1fr auto 26px; } .v0l input[type=text] { padding: 6px 8px; font-size: .95rem; } .v0sel { padding: 5px 4px; font-size: .85rem; width: auto; border-radius: 8px; }
+  .v0x { color: var(--muted); font-size: .95rem; padding: 4px; } .v0c.dm { width: 13px; height: 13px; border-radius: 2px; background: none; border: 2.5px solid var(--flag); transform: rotate(45deg); margin-left: 4px; }
   .v0lib { display: grid; text-align: left; padding: 9px 10px; border-radius: 10px; background: var(--surface-2); } .v0lib small { color: var(--muted); }
   .views button[aria-pressed="true"] { background: var(--flag); color: var(--flag-ink); box-shadow: 0 1px 3px rgb(0 0 0 / .18); }
   .views .cnt { font-family: var(--f-body); font-size: .72rem; background: var(--dt); color: var(--dt-ink); border-radius: 999px; padding: 1px 6px; margin-left: 4px; letter-spacing: 0; }
@@ -178,7 +180,8 @@
 <script>
 /* ===== e-Trace · noyau commun (e-Trace, e-DC, PC course) =====
    Tracé de référence : { name, pts: [lat, lng, lat, lng, …], marks: [{ k, name, i }] }
-   k : 'pd' parc fermé départ · 'dep' ligne de départ · 'pt' point marqué (chicane…) · 'arr' ligne d'arrivée · 'pa' parc fermé arrivée
+   k : 'dep' ligne de départ · 'arr' ligne d'arrivée · 'pt' point marqué, avec cat : 'chicane' | 'parc' | 'autre' et un nom libre
+   (anciens tracés : 'pd' et 'pa' sont lus comme des parcs « Parc fermé départ » et « Parc fermé arrivée »)
    i : indice du point du tracé (dans pts / 2). Distances en mètres, comptées depuis la ligne de départ. */
 const ET = (() => {
   const R = 6371008.8, rad = Math.PI / 180;
@@ -194,11 +197,14 @@ const ET = (() => {
     const P = [], cum = [0];
     for (let j = 0; j < n; j++) P.push([ref.pts[2 * j + 1] * rad * R * k, ref.pts[2 * j] * rad * R]);
     for (let j = 1; j < n; j++) cum.push(cum[j - 1] + Math.hypot(P[j][0] - P[j - 1][0], P[j][1] - P[j - 1][1]));
-    const marks = (Array.isArray(ref.marks) ? ref.marks : []).filter(m => m && Number.isInteger(m.i) && m.i >= 0 && m.i < n).map(m => ({ k: m.k, name: String(m.name || ''), i: m.i })).sort((a, b) => a.i - b.i);
+    const marks = (Array.isArray(ref.marks) ? ref.marks : []).filter(m => m && Number.isInteger(m.i) && m.i >= 0 && m.i < n).map(m => {
+      if (m.k === 'pd' || m.k === 'pa') return { k: 'pt', cat: 'parc', name: String(m.name || '') || (m.k === 'pd' ? 'Parc fermé départ' : 'Parc fermé arrivée'), i: m.i };
+      return { k: m.k, cat: m.k === 'pt' ? (['chicane', 'parc', 'autre'].includes(m.cat) ? m.cat : 'chicane') : '', name: String(m.name || ''), i: m.i };
+    }).sort((a, b) => a.i - b.i);
     const dm = marks.find(m => m.k === 'dep'), am = marks.find(m => m.k === 'arr');
     const iDep = dm ? dm.i : 0, iArr = am ? am.i : n - 1, c0 = cum[iDep];
     marks.forEach(m => m.s = cum[m.i] - c0);
-    let c = 0; marks.forEach(m => { if (m.k === 'pt') { c++; m.n = c; if (!m.name) m.name = 'Point ' + c; } });
+    let c = 0, o = 0; marks.forEach(m => { if (m.k !== 'pt') return; if (m.cat === 'chicane') { c++; m.n = c; if (!m.name) m.name = 'Chicane ' + c; } else { o++; if (!m.name) m.name = m.cat === 'parc' ? 'Parc' : 'Repère ' + o; } });
     return { ref, n, P, cum, lat0, k, iDep, iArr, c0, L: cum[iArr] - c0, marks, toXY: (lat, lng) => [lng * rad * R * k, lat * rad * R] };
   }
   // Situe une position sur le tracé : abscisse s (m depuis le départ), écart latéral, zone
@@ -221,10 +227,9 @@ const ET = (() => {
   // Libellé lisible d'une abscisse : « entre C2 et C3 · 1,40 km du départ »
   function where(pr, s) {
     if (!pr || !Number.isFinite(s)) return '';
-    if (s < -5) return 'liaison avant le départ' + (pr.marks.some(m => m.k === 'pd') ? ' (parc fermé départ)' : '');
-    if (s > pr.L + 5) return 'après l\'arrivée' + (pr.marks.some(m => m.k === 'pa') ? ' (vers le parc fermé arrivée)' : '');
     const pts = pr.marks.filter(m => m.k === 'pt');
     const near = pts.find(m => Math.abs(m.s - s) <= 25);
+    if (s < -5 || s > pr.L + 5) return (near ? 'à ' + near.name + ' · ' : '') + (s < 0 ? 'liaison avant le départ' : 'après l\'arrivée');
     let t;
     if (near) t = 'à ' + (near.name || 'C' + near.n);
     else {
@@ -268,7 +273,8 @@ const ET = (() => {
       const [u, v] = T(pr.P[m.i]);
       if (m.k === 'dep') s += lineAt(m.i, 'Départ');
       else if (m.k === 'arr') s += lineAt(m.i, 'Arrivée');
-      else if (m.k === 'pd' || m.k === 'pa') s += `<rect x="${(u - 7).toFixed(1)}" y="${(v - 7).toFixed(1)}" width="14" height="14" rx="3" fill="${C.bg}" stroke="${C.muted}" stroke-width="2.5"><title>${m.k === 'pd' ? 'Parc fermé départ' : 'Parc fermé arrivée'}</title></rect>`;
+      else if (m.k === 'pt' && m.cat === 'parc') s += `<rect x="${(u - 7).toFixed(1)}" y="${(v - 7).toFixed(1)}" width="14" height="14" rx="3" fill="${C.bg}" stroke="${C.muted}" stroke-width="2.5"><title>${m.name}</title></rect><text x="${(u > W - 90 ? u - 10 : u + 10).toFixed(1)}" text-anchor="${u > W - 90 ? 'end' : 'start'}" y="${(v + 18).toFixed(1)}" font-size="10" fill="${C.muted}" font-family="Atkinson Hyperlegible, sans-serif">${m.name.replace(/[&<>]/g, '')}</text>`;
+      else if (m.k === 'pt' && m.cat === 'autre') s += `<path d="M${u.toFixed(1)},${(v - 7).toFixed(1)} l7,7 l-7,7 l-7,-7 z" fill="${C.bg}" stroke="${C.mark}" stroke-width="2.5"><title>${m.name}</title></path><text x="${(u > W - 90 ? u - 10 : u + 10).toFixed(1)}" text-anchor="${u > W - 90 ? 'end' : 'start'}" y="${(v - 9).toFixed(1)}" font-size="10" fill="${C.muted}" font-family="Atkinson Hyperlegible, sans-serif">${m.name.replace(/[&<>]/g, '')}</text>`;
       else if (m.k === 'pt') s += `<circle cx="${u.toFixed(1)}" cy="${v.toFixed(1)}" r="9" fill="${C.mark}" stroke="${C.bg}" stroke-width="2"/><text x="${u.toFixed(1)}" y="${(v + 3.5).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" fill="#fff" font-family="Atkinson Hyperlegible, sans-serif">C${m.n}</text>`;
     }
     for (const d of dots) {
@@ -329,7 +335,7 @@ const ET = (() => {
     const S = G.map((f, j) => { if (j === 0 || j === G.length - 1) return { ...f }; const a = G[j - 1], b = G[j + 1]; return { t: f.t, lat: (a.lat + f.lat + b.lat) / 3, lng: (a.lng + f.lng + b.lng) / 3 }; });
     // repères rattachés au point le plus proche dans le temps
     const keep = new Set([0, S.length - 1]);
-    const mk = marks.map(m => { let bi = 0, bd = Infinity; S.forEach((f, j) => { const d = Math.abs(f.t - m.t); if (d < bd) { bd = d; bi = j; } }); keep.add(bi); return { k: m.k, name: m.name || '', j: bi }; });
+    const mk = marks.map(m => { let bi = 0, bd = Infinity; S.forEach((f, j) => { const d = Math.abs(f.t - m.t); if (d < bd) { bd = d; bi = j; } }); keep.add(bi); return { k: m.k, cat: m.cat || (m.k === 'pt' ? 'chicane' : ''), name: m.name || '', j: bi }; });
     // Douglas-Peucker (3 m) en gardant les repères
     const lat0 = S[0].lat, k = Math.cos(lat0 * rad), XY = S.map(f => [f.lng * rad * R * k, f.lat * rad * R]);
     const tol = 3, stack = [[0, S.length - 1]];
@@ -343,7 +349,7 @@ const ET = (() => {
     const idx = [...keep].sort((a, b) => a - b), map = new Map(idx.map((j, n) => [j, n]));
     const pts = []; idx.forEach(j => pts.push(+S[j].lat.toFixed(6), +S[j].lng.toFixed(6)));
     const accs = fixes.map(f => f.acc).filter(Number.isFinite);
-    return { pts, marks: mk.map(m => ({ k: m.k, name: m.name, i: map.get(m.j) })), stats: { raw: fixes.length, kept: idx.length, acc: accs.length ? accs.reduce((a, b) => a + b, 0) / accs.length : null, dur: (fixes[fixes.length - 1].t - fixes[0].t) / 1000 } };
+    return { pts, marks: mk.map(m => ({ k: m.k, cat: m.cat, name: m.name, i: map.get(m.j) })), stats: { raw: fixes.length, kept: idx.length, acc: accs.length ? accs.reduce((a, b) => a + b, 0) / accs.length : null, dur: (fixes[fixes.length - 1].t - fixes[0].t) / 1000 } };
   }
   // Import d'un fichier GPX : tout le fichier devient le parcours chronométré
   function fromGpx(text) {
@@ -561,7 +567,6 @@ function v0mark(k) {
   const t = V.fixes.length ? V.fixes[V.fixes.length - 1].t : Date.now();
   if (k === 'dep' && V.marks.some(m => m.k === 'dep')) return;
   if (k === 'arr' && (!V.marks.some(m => m.k === 'dep') || V.marks.some(m => m.k === 'arr'))) return;
-  if (k === 'pd' && V.marks.some(m => m.k === 'pd')) return;
   V.marks.push({ k, t }); v0save();
   if (navigator.vibrate) navigator.vibrate(60);
   render();
@@ -570,10 +575,8 @@ function v0stop() {
   if (!confirm('Arrêter l\'enregistrement ? Le tracé sera affiché pour vérification.')) return;
   const marks = V.marks.slice();
   if (V.fixes.length) {
-    // parc fermé départ = premier point, parc fermé arrivée = dernier point (si des liaisons ont été enregistrées)
+    // les repères (parcs, chicanes, pré-grille…) sont ceux marqués pendant le passage ; départ et arrivée par défaut aux extrémités
     const dep = marks.find(m => m.k === 'dep'), arr = marks.find(m => m.k === 'arr');
-    if (dep && dep.t - V.fixes[0].t > 3000) marks.unshift({ k: 'pd', t: V.fixes[0].t });
-    if (arr && V.fixes[V.fixes.length - 1].t - arr.t > 3000) marks.push({ k: 'pa', t: V.fixes[V.fixes.length - 1].t });
     if (!dep) marks.unshift({ k: 'dep', t: V.fixes[0].t });
     if (!arr) marks.push({ k: 'arr', t: V.fixes[V.fixes.length - 1].t });
   }
@@ -581,7 +584,10 @@ function v0stop() {
   V.st = 'review'; V.msg = V.built ? '' : 'Pas assez de points GPS pour construire le tracé.'; v0save(); v0gps(); render();
 }
 function v0restart() { if (!confirm('Recommencer ? L\'enregistrement affiché sera perdu.')) return; V.st = 'idle'; V.fixes = []; V.marks = []; V.built = null; V.names = {}; v0save(); render(); }
-function v0setName(i, v) { V.names[i] = v; v0save(); }
+// nom et type des points marqués, modifiables à la vérification ; un point marqué par erreur peut être retiré
+function v0setName(j, v) { if (V.built && V.built.marks[j]) { V.built.marks[j].name = v; v0save(); } }
+function v0setCat(j, v) { if (V.built && V.built.marks[j]) { V.built.marks[j].cat = v; v0save(); render(); } }
+function v0del(j) { if (V.built && V.built.marks[j] && V.built.marks[j].k === 'pt' && confirm('Retirer ce point ?')) { V.built.marks.splice(j, 1); v0save(); render(); } }
 function v0gpx(inp) {
   const f = inp.files && inp.files[0]; if (!f) return;
   f.text().then(t => { const b = ET.fromGpx(t); if (!b) { V.msg = 'Fichier GPX illisible ou sans points.'; render(); return; } V.built = b; V.st = 'review'; V.names = {}; V.name = V.name || f.name.replace(/\.gpx$/i, ''); V.msg = ''; v0save(); render(); });
@@ -589,8 +595,10 @@ function v0gpx(inp) {
 const slug = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'trace';
 function v0ref() {
   if (!V.built) return null;
-  let c = 0;
-  const marks = V.built.marks.map((m, j) => ({ k: m.k, name: m.k === 'pt' ? (c++, String(V.names[j] || '').trim() || 'Chicane ' + c) : '', i: m.i }));
+  const marks = V.built.marks.map(m => ({ k: m.k, cat: m.k === 'pt' ? (m.cat || 'chicane') : '', name: m.k === 'pt' ? String(m.name || '').trim() : '', i: m.i }));
+  // noms par défaut (Chicane 1, Parc…) enregistrés tels quels, pour que la bibliothèque des tracés les garde
+  const pr = ET.prep({ pts: V.built.pts, marks });
+  if (pr) marks.forEach(m => { if (m.k === 'pt' && !m.name) { const q = pr.marks.find(x => x.k === 'pt' && x.i === m.i && x.cat === m.cat); if (q) m.name = q.name; } });
   return { name: String(V.name || '').trim(), pts: V.built.pts, marks };
 }
 async function v0validate() {
@@ -643,32 +651,36 @@ function v0HTML() {
     const npt = V.marks.filter(m => m.k === 'pt').length, depT = (V.marks.find(m => m.k === 'dep') || {}).t;
     const pr = v0preview();
     return msg + `<div class="v0rec"><span class="recdot"></span><b>Enregistrement</b><b id="v0el" class="v0el">${mmss(el)}</b></div>
-      <div class="v0chips">${chip('Parc départ', 'ok')}›${chip(has('dep') ? 'Départ ✓' : 'Départ', stage >= 2 ? 'ok' : 'cur')}›${chip('Chronométré', stage === 2 ? 'cur' : stage > 2 ? 'ok' : '')}›${chip(has('arr') ? 'Arrivée ✓' : 'Arrivée', stage > 2 ? 'ok' : '')}›${chip('Parc arrivée', stage > 2 ? 'cur' : '')}</div>
+      <div class="v0chips">${chip('Liaison', stage === 0 ? 'cur' : 'ok')}›${chip(has('dep') ? 'Départ ✓' : 'Départ', stage >= 2 ? 'ok' : '')}›${chip('Chronométré', stage === 2 ? 'cur' : stage > 2 ? 'ok' : '')}›${chip(has('arr') ? 'Arrivée ✓' : 'Arrivée', stage > 2 ? 'ok' : '')}›${chip('Liaison', stage > 2 ? 'cur' : '')}</div>
       <div class="v0tiles"><div><small>Distance</small><b id="v0d">${ET.km(v0len(V.fixes))}</b></div><div><small>GPS</small><b id="v0a" style="color:${v0acc != null && v0acc <= 10 ? 'var(--best)' : 'var(--warn)'}">${v0acc != null ? '± ' + Math.round(v0acc) + ' m' : '…'}</b></div><div><small>Points</small><b id="v0n">${V.fixes.length}</b></div></div>
       <div class="etplan" id="v0plan">${pr ? ET.svg(pr, last ? [{ lat: last.lat, lng: last.lng, color: '#d23b2f', pulse: true }] : [], th) : '<div class="empty">Le tracé apparaît après quelques secondes de route.</div>'}</div>
       ${v0err ? `<div class="banner">${esc(v0err)}</div>` : ''}
-      <div class="hint">${npt ? `${npt} point(s) marqué(s)` : 'Marquez chaque chicane à son passage.'}${depT ? '' : ' · Touchez « Départ » sur la ligne de départ.'}</div>
+      <div class="hint">${npt ? `${npt} point(s) marqué(s), à nommer à la fin` : 'Marquez tout repère utile : parc concurrent, pré-grille, chicanes…'}${depT ? '' : ' · Touchez « Départ » sur la ligne de départ.'}</div>
       <button class="v0big" onclick="v0mark('pt')">+ Marquer un point</button>
       <div class="v0two"><button class="v0b ${has('dep') ? 'done' : ''}" onclick="v0mark('dep')" ${has('dep') ? 'disabled' : ''}>${has('dep') ? `✓ Départ<small>marqué à ${mmss((depT - V.t0) / 1000)}</small>` : 'Départ'}</button>
       <button class="v0b ${has('arr') ? 'done' : ''}" onclick="v0mark('arr')" ${!has('dep') || has('arr') ? 'disabled' : ''}>${has('arr') ? '✓ Arrivée' : 'Arrivée'}</button></div>
       <button class="v0stop" onclick="v0stop()">■ Arrêter l'enregistrement</button>
-      <p class="hint" style="text-align:center">Commencer au parc fermé départ · arrêter au parc fermé arrivée · fonctionne sans réseau</p>`;
+      <p class="hint" style="text-align:center">Commencez et arrêtez où vous voulez · fonctionne sans réseau</p>`;
   }
   if (V.st === 'review') {
     if (!V.built) return msg + `<button class="btn" onclick="V.st='idle';v0save();render()">Retour</button>`;
     const r = v0ref(), pr = ET.prep(r);
     const liai = pr.cum[pr.iDep] + (pr.cum[pr.n - 1] - pr.cum[pr.iArr]);
-    let c = 0;
+    const pm = pr.marks;
     const lines = V.built.marks.map((m, j) => {
       const s = pr.cum[m.i] - pr.c0, d = s < 0 ? '− ' + ET.km(s) : s > pr.L + 1 ? '+ ' + ET.km(s - pr.L) : ET.km(s);
-      if (m.k === 'pt') { c++; return `<div class="v0l"><span class="v0c">C${c}</span><input type="text" value="${esc(V.names[j] || 'Chicane ' + c)}" oninput="v0setName(${j}, this.value)" aria-label="Nom du point ${c}"><span>${d}</span></div>`; }
-      const lab = { pd: 'Parc fermé départ', dep: '<b>Ligne de départ</b>', arr: '<b>Ligne d\'arrivée</b>', pa: 'Parc fermé arrivée' }[m.k];
-      return `<div class="v0l"><span class="v0c ${m.k === 'pd' || m.k === 'pa' ? 'sq' : 'ln'}"></span><span class="v0n">${lab}</span><span>${m.k === 'pa' ? '+ ' + ET.km(s - pr.L) : d}</span></div>`;
+      if (m.k === 'pt') {
+        const cat = m.cat || 'chicane', q = pm.find(x => x.k === 'pt' && x.i === m.i && x.cat === cat) || {};
+        const ic = cat === 'parc' ? '<span class="v0c sq"></span>' : cat === 'autre' ? '<span class="v0c dm"></span>' : `<span class="v0c">C${q.n || ''}</span>`;
+        const sel = `<select class="v0sel" onchange="v0setCat(${j}, this.value)" aria-label="Type du point">${[['chicane', 'Chicane'], ['parc', 'Parc'], ['autre', 'Autre']].map(([v, l]) => `<option value="${v}" ${v === cat ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
+        return `<div class="v0l pt">${ic}${sel}<input type="text" value="${esc(m.name || '')}" placeholder="${esc(q.name || '')}" oninput="v0setName(${j}, this.value)" aria-label="Nom du point"><span>${d}</span><button class="v0x" onclick="v0del(${j})" aria-label="Retirer ce point">✕</button></div>`;
+      }
+      return `<div class="v0l"><span class="v0c ln"></span><span class="v0n"><b>${m.k === 'dep' ? 'Ligne de départ' : 'Ligne d\'arrivée'}</b></span><span>${d}</span></div>`;
     }).join('');
     const st = V.built.stats || {};
     return msg + `<div class="sect">Tracé enregistré · à vérifier</div><div class="etplan">${ET.svg(pr, [], th)}</div>
       <div class="hint">Parcours chronométré <b>${ET.km(pr.L)}</b> · liaisons ${ET.km(liai)}${st.dur ? ' · durée ' + mmss(st.dur) : ''}${st.acc ? ' · précision moyenne ± ' + Math.round(st.acc) + ' m' : ''}</div>
-      <div class="card"><div class="label">Repères · noms modifiables · distance depuis le départ</div>${lines}</div>
+      <div class="card"><div class="label">Repères · type et nom modifiables · distance depuis le départ</div>${lines}</div>
       <label>Nom du tracé (lieu)<input type="text" id="v0name" value="${esc(V.name || S.name || '')}" oninput="V.name=this.value;v0save()" placeholder="ex. Papenoo · course de côte"></label>
       ${refDoc ? `<p class="hint">Remplacera le tracé de référence actuel de l'épreuve (« ${esc(refDoc.name || '')} »).</p>` : ''}
       <div class="v0two"><button class="v0b ghost" onclick="v0restart()">Recommencer</button><button class="v0b ok" onclick="v0validate()">Valider le tracé</button></div>`;
@@ -678,7 +690,7 @@ function v0HTML() {
     : `<div class="card"><div class="label">Tracé de référence de l'épreuve</div><span class="hint">Aucun pour le moment. Enregistrez-le pendant l'inspection du tracé, ou reprenez un tracé déjà enregistré sur ce lieu.</span></div>`;
   const lib = V.tracks ? `<div class="card"><div class="label">Tracés enregistrés</div>${V.tracks.map(t => `<button class="v0lib" onclick="v0use('${esc(t.id)}')"><b>${esc(t.name || t.id)}</b><small>${t.L ? ET.km(t.L) : ''}${t.at ? ' · ' + new Date(t.at).toLocaleDateString('fr-FR') : ''}</small></button>`).join('') || '<span class="hint">Aucun.</span>'}</div>` : '';
   return msg + cur + `<button class="v0big" onclick="v0start()">● Commencer l'enregistrement</button>
-    <p class="hint">À lancer au parc fermé départ, téléphone fixé dans la Voiture 0. Pendant le passage : « Départ » sur la ligne, « + Marquer un point » à chaque chicane, « Arrivée » sur la ligne, puis « Arrêter » au parc fermé arrivée.</p>
+    <p class="hint">Téléphone fixé dans la Voiture 0, commencez où vous voulez (parc concurrent, par exemple). Pendant le passage : « + Marquer un point » pour chaque repère utile (parc, pré-grille, chicane…), « Départ » et « Arrivée » sur les lignes, puis « Arrêter » quand vous voulez. Vous nommerez les points à la fin.</p>
     <div class="v0two"><button class="v0b ghost" onclick="v0list()">Reprendre un tracé enregistré</button><label class="v0b ghost" style="display:flex;align-items:center;justify-content:center;cursor:pointer">Importer un GPX<input type="file" accept=".gpx,application/gpx+xml" onchange="v0gpx(this)" hidden></label></div>${lib}`;
 }
 function v0light() {
