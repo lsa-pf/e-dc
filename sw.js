@@ -1,6 +1,6 @@
 // e-DC (écran du Directeur de course) — mise en cache pour s'ouvrir même sans réseau.
 // Changer VERSION à chaque mise à jour de la page pour que les appareils la récupèrent.
-const VERSION = 'e-dc-v1';
+const VERSION = 'e-dc-v2';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

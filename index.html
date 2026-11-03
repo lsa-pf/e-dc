@@ -60,8 +60,39 @@
   .pill-run { font-family: var(--f-num); font-weight: 700; color: var(--run); background: var(--run-bg); border: 1px dashed var(--run); border-radius: 6px; padding: 1px 6px; }
   .pill-fin { font-family: var(--f-num); font-weight: 700; color: var(--best); background: var(--best-bg); border-radius: 6px; padding: 1px 6px; }
 
-  .views { display: grid; grid-template-columns: 1fr 1fr 1fr; background: var(--surface-2); border-radius: 12px; padding: 4px; gap: 4px; }
-  .views button { padding: 9px 4px; border-radius: 9px; font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 1rem; white-space: nowrap; }
+  .views { display: grid; grid-template-columns: repeat(5, auto); background: var(--surface-2); border-radius: 12px; padding: 4px; gap: 4px; }
+  .views button { padding: 9px 4px; border-radius: 9px; font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: .02em; font-size: .9rem; white-space: nowrap; position: relative; }
+  .views .adot { position: absolute; top: 4px; right: 3px; width: 9px; height: 9px; border-radius: 50%; }
+  /* e-Trace : bandeau d'alerte, onglet Piste, onglet Voiture 0 */
+  .etb { display: flex; align-items: center; gap: 10px; background: var(--c); color: #fff; border-radius: 12px; padding: 9px 10px; }
+  .etb > span:nth-child(2) { display: grid; min-width: 0; flex: 1; } .etb span b { font-family: var(--f-display); font-size: 1.15rem; text-transform: uppercase; } .etb small { font-size: .8rem; opacity: .92; }
+  .etn { font-family: var(--f-display); font-weight: 800; font-size: 1.7rem; background: #fff; color: var(--c); border-radius: 8px; padding: 0 9px; line-height: 1.25; }
+  .etb .etbtn { margin-left: auto; display: flex; gap: 6px; } .etbtn button { background: rgb(255 255 255 / .2); color: #fff; font-weight: 800; padding: 7px 8px; border-radius: 8px; font-size: .82rem; }
+  .etb .etbtn { flex-direction: column; }
+  .etcard { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; display: grid; gap: 2px; }
+  .etcard small { color: var(--muted); font-size: .84rem; } .etbig { font-family: var(--f-display); font-weight: 800; font-size: 1.3rem; text-transform: uppercase; }
+  .etcard.al { background: color-mix(in srgb, var(--c) 14%, var(--surface)); border: 2px solid var(--c); display: flex; gap: 12px; align-items: center; }
+  .etcard.al .etn { background: var(--c); color: #fff; } .etcard.al span { display: grid; } .etcard.al .etbig { color: var(--c); }
+  .etplan { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 8px; }
+  .etrows { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 2px 14px; }
+  .etrows div { display: flex; justify-content: space-between; gap: 8px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: .92rem; } .etrows div:last-child { border: 0; }
+  .etphs { display: flex; flex-wrap: wrap; gap: 6px; } .etph { background: var(--best-bg); color: var(--best); font-weight: 700; font-size: .84rem; padding: 3px 9px; border-radius: 999px; } .etph.off { background: var(--surface-2); color: var(--muted); }
+  .v0rec { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; font-family: var(--f-display); font-size: 1.3rem; text-transform: uppercase; }
+  .recdot { width: 14px; height: 14px; border-radius: 50%; background: #d23b2f; box-shadow: 0 0 0 5px rgb(210 59 47 / .2); } .v0el { margin-left: auto; font-size: 1.6rem; }
+  .v0chips { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; color: var(--muted); font-size: .8rem; }
+  .v0chip { background: var(--surface-2); color: var(--muted); border-radius: 999px; padding: 3px 9px; font-weight: 700; } .v0chip.ok { background: var(--best-bg); color: var(--best); } .v0chip.cur { background: var(--flag); color: var(--flag-ink); }
+  .v0tiles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; } .v0tiles div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 7px 10px; }
+  .v0tiles small { display: block; font-size: .74rem; color: var(--muted); } .v0tiles b { font-family: var(--f-display); font-size: 1.35rem; }
+  .v0big { height: 62px; border-radius: 16px; background: var(--flag); color: var(--flag-ink); font-family: var(--f-display); font-weight: 800; font-size: 1.45rem; text-transform: uppercase; letter-spacing: .03em; width: 100%; }
+  .v0two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .v0b { min-height: 54px; border-radius: 14px; background: var(--fg); color: var(--bg); font-family: var(--f-display); font-weight: 800; font-size: 1.2rem; text-transform: uppercase; display: grid; place-content: center; line-height: 1.1; }
+  .v0b small { font-family: var(--f-body); font-size: .72rem; text-transform: none; font-weight: 400; } .v0b.done { background: var(--surface-2); color: var(--muted); } .v0b[disabled]:not(.done) { opacity: .4; }
+  .v0b.ghost { background: var(--surface); color: var(--muted); border: 1px solid var(--line); font-family: var(--f-body); font-size: .92rem; text-transform: none; font-weight: 700; } .v0b.ok { background: var(--best); color: #fff; }
+  .v0stop { height: 48px; border-radius: 14px; border: 2px solid #d23b2f; color: #d23b2f; font-family: var(--f-display); font-weight: 800; font-size: 1.1rem; text-transform: uppercase; width: 100%; }
+  .v0l { display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; align-items: center; font-size: .92rem; padding: 2px 0; }
+  .v0l input { padding: 5px 8px; font-size: .95rem; } .v0c { width: 20px; height: 20px; border-radius: 50%; background: var(--flag); color: #fff; font-size: .62rem; font-weight: 800; display: grid; place-items: center; }
+  .v0c.sq { border-radius: 4px; background: none; border: 2px solid var(--muted); width: 14px; height: 14px; margin-left: 3px; } .v0c.ln { background: none; border-top: 3px dashed var(--fg); border-radius: 0; height: 0; }
+  .v0lib { display: grid; text-align: left; padding: 9px 10px; border-radius: 10px; background: var(--surface-2); } .v0lib small { color: var(--muted); }
   .views button[aria-pressed="true"] { background: var(--flag); color: var(--flag-ink); box-shadow: 0 1px 3px rgb(0 0 0 / .18); }
   .views .cnt { font-family: var(--f-body); font-size: .72rem; background: var(--dt); color: var(--dt-ink); border-radius: 999px; padding: 1px 6px; margin-left: 4px; letter-spacing: 0; }
 
@@ -145,11 +176,178 @@
 <div id="app"></div>
 
 <script>
+/* ===== e-Trace · noyau commun (e-Trace, e-DC, PC course) =====
+   Tracé de référence : { name, pts: [lat, lng, lat, lng, …], marks: [{ k, name, i }] }
+   k : 'pd' parc fermé départ · 'dep' ligne de départ · 'pt' point marqué (chicane…) · 'arr' ligne d'arrivée · 'pa' parc fermé arrivée
+   i : indice du point du tracé (dans pts / 2). Distances en mètres, comptées depuis la ligne de départ. */
+const ET = (() => {
+  const R = 6371008.8, rad = Math.PI / 180;
+  // Réglages par défaut (modifiables plus tard par épreuve : champ « etrace » du document de l'épreuve)
+  const DEF = { fast: 2, slow: 30, vStop: 1, nStop: 2, orange: 2, red: 10, lost: 6, endGuard: 50, maxAcc: 25 };
+  const cfg = ev => { const o = { ...DEF }, e = ev && ev.etrace; if (e && typeof e === 'object') for (const k in DEF) if (Number.isFinite(+e[k]) && +e[k] > 0) o[k] = +e[k]; return o; };
+  const dist = (a1, o1, a2, o2) => { const k = Math.cos((a1 + a2) / 2 * rad); return Math.hypot((o2 - o1) * rad * R * k, (a2 - a1) * rad * R); };
+
+  // Prépare un tracé : coordonnées planes locales, distances cumulées, repères
+  function prep(ref) {
+    if (!ref || !Array.isArray(ref.pts) || ref.pts.length < 4) return null;
+    const n = Math.floor(ref.pts.length / 2), lat0 = ref.pts[0], k = Math.cos(lat0 * rad);
+    const P = [], cum = [0];
+    for (let j = 0; j < n; j++) P.push([ref.pts[2 * j + 1] * rad * R * k, ref.pts[2 * j] * rad * R]);
+    for (let j = 1; j < n; j++) cum.push(cum[j - 1] + Math.hypot(P[j][0] - P[j - 1][0], P[j][1] - P[j - 1][1]));
+    const marks = (Array.isArray(ref.marks) ? ref.marks : []).filter(m => m && Number.isInteger(m.i) && m.i >= 0 && m.i < n).map(m => ({ k: m.k, name: String(m.name || ''), i: m.i })).sort((a, b) => a.i - b.i);
+    const dm = marks.find(m => m.k === 'dep'), am = marks.find(m => m.k === 'arr');
+    const iDep = dm ? dm.i : 0, iArr = am ? am.i : n - 1, c0 = cum[iDep];
+    marks.forEach(m => m.s = cum[m.i] - c0);
+    let c = 0; marks.forEach(m => { if (m.k === 'pt') { c++; m.n = c; if (!m.name) m.name = 'Point ' + c; } });
+    return { ref, n, P, cum, lat0, k, iDep, iArr, c0, L: cum[iArr] - c0, marks, toXY: (lat, lng) => [lng * rad * R * k, lat * rad * R] };
+  }
+  // Situe une position sur le tracé : abscisse s (m depuis le départ), écart latéral, zone
+  function locate(pr, lat, lng, hint) {
+    if (!pr) return null;
+    const [x, y] = pr.toXY(lat, lng);
+    let best = null;
+    for (let j = 0; j < pr.n - 1; j++) {
+      const [ax, ay] = pr.P[j], [bx, by] = pr.P[j + 1], dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy;
+      const u = l2 ? Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / l2)) : 0;
+      const d = Math.hypot(x - ax - u * dx, y - ay - u * dy);
+      const s = pr.cum[j] + u * Math.sqrt(l2) - pr.c0;
+      // à distance comparable, on préfère le tronçon proche de la position précédente (route qui repasse près d'elle-même)
+      const score = d + (Number.isFinite(hint) ? Math.min(60, Math.abs(s - hint) / 20) : 0);
+      if (!best || score < best.score) best = { score, s, off: d };
+    }
+    return { s: best.s, off: best.off, zone: best.s < 0 ? 'pd' : best.s > pr.L ? 'pa' : 'ch' };
+  }
+  const km = s => (Math.abs(s) / 1000).toFixed(2).replace('.', ',') + ' km';
+  // Libellé lisible d'une abscisse : « entre C2 et C3 · 1,40 km du départ »
+  function where(pr, s) {
+    if (!pr || !Number.isFinite(s)) return '';
+    if (s < -5) return 'liaison avant le départ' + (pr.marks.some(m => m.k === 'pd') ? ' (parc fermé départ)' : '');
+    if (s > pr.L + 5) return 'après l\'arrivée' + (pr.marks.some(m => m.k === 'pa') ? ' (vers le parc fermé arrivée)' : '');
+    const pts = pr.marks.filter(m => m.k === 'pt');
+    const near = pts.find(m => Math.abs(m.s - s) <= 25);
+    let t;
+    if (near) t = 'à ' + (near.name || 'C' + near.n);
+    else {
+      const prev = [...pts].reverse().find(m => m.s < s), next = pts.find(m => m.s > s);
+      t = prev && next ? `entre ${prev.name} et ${next.name}` : prev ? `après ${prev.name}` : next ? `avant ${next.name}` : '';
+    }
+    return (t ? t + ' · ' : '') + km(s) + ' du départ';
+  }
+  // Point du tracé à l'abscisse s (pour placer un repère)
+  function at(pr, s) {
+    const c = s + pr.c0;
+    let j = 0; while (j < pr.n - 2 && pr.cum[j + 1] < c) j++;
+    const l = pr.cum[j + 1] - pr.cum[j], u = l ? Math.max(0, Math.min(1, (c - pr.cum[j]) / l)) : 0;
+    return [pr.P[j][0] + u * (pr.P[j + 1][0] - pr.P[j][0]), pr.P[j][1] + u * (pr.P[j + 1][1] - pr.P[j][1])];
+  }
+
+  // Plan SVG du tracé. dots : [{ lat, lng, color, label, pulse }]. th : couleurs (fond clair ou sombre)
+  function svg(pr, dots = [], th = {}) {
+    const C = { road: '#c9d8e0', chrono: '#1f5fae', liaison: '#9fb4c2', ink: '#0e2a47', muted: '#4a6274', bg: '#ffffff', mark: '#1f5fae', ...th };
+    if (!pr) return `<div style="padding:24px 10px;text-align:center;color:${C.muted};font-size:.9rem">Aucun tracé de référence pour cette épreuve.<br>Le Directeur de course peut l'enregistrer dans e-DC, onglet « Voiture 0 ».</div>`;
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    pr.P.forEach(([x, y]) => { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); });
+    // hauteur adaptée à la forme du tracé (ni bande vide, ni plan trop haut)
+    const W = 360, pad = 24, H = Math.round(Math.max(170, Math.min(320, 2 * pad + (W - 2 * pad) * (y1 - y0) / Math.max(1, x1 - x0))));
+    const sc = Math.min((W - 2 * pad) / Math.max(1, x1 - x0), (H - 2 * pad) / Math.max(1, y1 - y0));
+    const ox = (W - (x1 - x0) * sc) / 2, oy = (H - (y1 - y0) * sc) / 2;
+    const T = ([x, y]) => [ox + (x - x0) * sc, H - oy - (y - y0) * sc];
+    const path = (a, b) => { let d = ''; for (let j = a; j <= b; j++) { const [u, v] = T(pr.P[j]); d += (j === a ? 'M' : 'L') + u.toFixed(1) + ',' + v.toFixed(1); } return d; };
+    let s = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="Plan du tracé">`;
+    if (pr.iDep > 0) s += `<path d="${path(0, pr.iDep)}" fill="none" stroke="${C.liaison}" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"/>`;
+    if (pr.iArr < pr.n - 1) s += `<path d="${path(pr.iArr, pr.n - 1)}" fill="none" stroke="${C.liaison}" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"/>`;
+    s += `<path d="${path(pr.iDep, pr.iArr)}" fill="none" stroke="${C.road}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>`;
+    s += `<path d="${path(pr.iDep, pr.iArr)}" fill="none" stroke="${C.chrono}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;
+    const lineAt = (i, label) => {
+      const a = pr.P[Math.max(0, i - 1)], b = pr.P[Math.min(pr.n - 1, i + 1)], [u, v] = T(pr.P[i]);
+      let dx = b[0] - a[0], dy = -(b[1] - a[1]); const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
+      return `<line x1="${(u - dy * 14).toFixed(1)}" y1="${(v + dx * 14).toFixed(1)}" x2="${(u + dy * 14).toFixed(1)}" y2="${(v - dx * 14).toFixed(1)}" stroke="${C.ink}" stroke-width="4" stroke-dasharray="3 3"/>`
+        + `<text x="${(u + dy * 18).toFixed(1)}" y="${(v - dx * 18 + 4).toFixed(1)}" text-anchor="${dy >= 0 ? 'start' : 'end'}" font-size="12" font-weight="700" fill="${C.ink}" font-family="Atkinson Hyperlegible, sans-serif">${label}</text>`;
+    };
+    for (const m of pr.marks) {
+      const [u, v] = T(pr.P[m.i]);
+      if (m.k === 'dep') s += lineAt(m.i, 'Départ');
+      else if (m.k === 'arr') s += lineAt(m.i, 'Arrivée');
+      else if (m.k === 'pd' || m.k === 'pa') s += `<rect x="${(u - 7).toFixed(1)}" y="${(v - 7).toFixed(1)}" width="14" height="14" rx="3" fill="${C.bg}" stroke="${C.muted}" stroke-width="2.5"><title>${m.k === 'pd' ? 'Parc fermé départ' : 'Parc fermé arrivée'}</title></rect>`;
+      else if (m.k === 'pt') s += `<circle cx="${u.toFixed(1)}" cy="${v.toFixed(1)}" r="9" fill="${C.mark}" stroke="${C.bg}" stroke-width="2"/><text x="${u.toFixed(1)}" y="${(v + 3.5).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" fill="#fff" font-family="Atkinson Hyperlegible, sans-serif">C${m.n}</text>`;
+    }
+    for (const d of dots) {
+      if (!Number.isFinite(d.lat) || !Number.isFinite(d.lng)) continue;
+      const [u, v] = T(pr.toXY(d.lat, d.lng));
+      if (u < -40 || u > W + 40 || v < -40 || v > H + 40) continue;
+      if (d.pulse) s += `<circle cx="${u.toFixed(1)}" cy="${v.toFixed(1)}" r="17" fill="${d.color}" fill-opacity=".28"/>`;
+      s += `<circle cx="${u.toFixed(1)}" cy="${v.toFixed(1)}" r="8" fill="${d.color}" stroke="${C.bg}" stroke-width="2.5"/>`;
+      if (d.label) s += `<text x="${(u + 12).toFixed(1)}" y="${(v - 10).toFixed(1)}" font-size="13" font-weight="700" fill="${C.ink}" font-family="Atkinson Hyperlegible, sans-serif" paint-order="stroke" stroke="${C.bg}" stroke-width="3">${d.label}</text>`;
+    }
+    return s + '</svg>';
+  }
+
+  // État d'alerte d'un pilote en piste, vu par le PC course ou e-DC.
+  // trk : document public/track ; T : document trace du téléphone du pilote (ou null), reçu à T._got (horloge locale)
+  // Retour : { lvl: 'ok' | 'orange' | 'red' | 'lost', dur, age, msg }
+  function alertState(trk, T, pr, c, now = Date.now()) {
+    if (!trk || trk.status !== 'run' || !trk.bib) return null;
+    const since = (now - (trk._got || now)) / 1000;
+    if (!T) return { lvl: 'none' };                     // pilote sans e-Trace : rien à surveiller
+    const age = (now - (T._got || 0)) / 1000 + (Number(T.fa) || 0);   // + âge du dernier point GPS au moment de l'envoi
+    const thisRun = T.armed && String(T.bib) === String(trk.bib) && Number(T.run) === Number(trk.startAt);
+    if ((age > c.lost && since > c.lost) || (!thisRun && since > c.lost + 2)) return { lvl: 'lost', age: Math.round(Math.min(age, since)) };
+    if (!thisRun) return { lvl: 'ok' };
+    const nearEnd = pr && Number.isFinite(T.d) && T.d > pr.L - c.endGuard;
+    const dur = T.stopFor > 0 ? T.stopFor + Math.max(0, age) : 0;
+    if (dur >= c.red && !nearEnd) return { lvl: 'red', dur: Math.floor(dur) };
+    if (dur >= c.orange && !nearEnd) return { lvl: 'orange', dur: Math.floor(dur) };
+    return { lvl: 'ok' };
+  }
+  const COL = { orange: '#e07a00', red: '#b3261e', lost: '#6a4fc4', ok: '#1d7a3a' };
+  const LBL = { orange: 'Arrêté', red: 'Arrêt prolongé', lost: 'Position perdue' };
+
+  // ----- Traitement d'un enregistrement Voiture 0 -----
+  // fixes : [{ t, lat, lng, acc }] ; marks : [{ k, name, t }] → tracé allégé { pts, marks, stats }
+  function build(fixes, marks, maxAcc = 25) {
+    let F = fixes.filter(f => Number.isFinite(f.lat) && Number.isFinite(f.lng) && (!(f.acc > maxAcc)));
+    // sauts impossibles (> 70 m/s) écartés
+    const G = [];
+    for (const f of F) { const p = G[G.length - 1]; if (p && f.t > p.t && dist(p.lat, p.lng, f.lat, f.lng) / ((f.t - p.t) / 1000) > 70) continue; if (p && dist(p.lat, p.lng, f.lat, f.lng) < 1) continue; G.push(f); }
+    if (G.length < 2) return null;
+    // lissage léger (moyenne glissante sur 3 points)
+    const S = G.map((f, j) => { if (j === 0 || j === G.length - 1) return { ...f }; const a = G[j - 1], b = G[j + 1]; return { t: f.t, lat: (a.lat + f.lat + b.lat) / 3, lng: (a.lng + f.lng + b.lng) / 3 }; });
+    // repères rattachés au point le plus proche dans le temps
+    const keep = new Set([0, S.length - 1]);
+    const mk = marks.map(m => { let bi = 0, bd = Infinity; S.forEach((f, j) => { const d = Math.abs(f.t - m.t); if (d < bd) { bd = d; bi = j; } }); keep.add(bi); return { k: m.k, name: m.name || '', j: bi }; });
+    // Douglas-Peucker (3 m) en gardant les repères
+    const lat0 = S[0].lat, k = Math.cos(lat0 * rad), XY = S.map(f => [f.lng * rad * R * k, f.lat * rad * R]);
+    const tol = 3, stack = [[0, S.length - 1]];
+    while (stack.length) {
+      const [a, b] = stack.pop(); let md = 0, mi = -1;
+      const [ax, ay] = XY[a], [bx, by] = XY[b], dx = bx - ax, dy = by - ay, l = Math.hypot(dx, dy) || 1;
+      for (let j = a + 1; j < b; j++) { const d = Math.abs((XY[j][0] - ax) * dy - (XY[j][1] - ay) * dx) / l; if (d > md) { md = d; mi = j; } }
+      if (md > tol) { keep.add(mi); stack.push([a, mi], [mi, b]); }
+    }
+    for (const m of mk) keep.add(m.j);
+    const idx = [...keep].sort((a, b) => a - b), map = new Map(idx.map((j, n) => [j, n]));
+    const pts = []; idx.forEach(j => pts.push(+S[j].lat.toFixed(6), +S[j].lng.toFixed(6)));
+    const accs = fixes.map(f => f.acc).filter(Number.isFinite);
+    return { pts, marks: mk.map(m => ({ k: m.k, name: m.name, i: map.get(m.j) })), stats: { raw: fixes.length, kept: idx.length, acc: accs.length ? accs.reduce((a, b) => a + b, 0) / accs.length : null, dur: (fixes[fixes.length - 1].t - fixes[0].t) / 1000 } };
+  }
+  // Import d'un fichier GPX : tout le fichier devient le parcours chronométré
+  function fromGpx(text) {
+    const doc = new DOMParser().parseFromString(text, 'application/xml');
+    const nodes = [...doc.getElementsByTagName('trkpt'), ...doc.getElementsByTagName('rtept')];
+    const fixes = nodes.map((p, j) => ({ t: j * 1000, lat: +p.getAttribute('lat'), lng: +p.getAttribute('lon') })).filter(f => Number.isFinite(f.lat) && Number.isFinite(f.lng));
+    if (fixes.length < 2) return null;
+    return build(fixes, [{ k: 'dep', t: 0 }, { k: 'arr', t: (fixes.length - 1) * 1000 }]);
+  }
+  return { DEF, cfg, dist, prep, locate, where, at, svg, alertState, COL, LBL, build, fromGpx, km };
+})();
+
+</script>
+<script>
 /* ---------------- État local ---------------- */
 const LS = 'asat_dc_v1';
 let S = { code: '', name: '', who: '', view: 'pass' };
 try { const r = JSON.parse(localStorage.getItem(LS) || 'null'); if (r && typeof r === 'object') S = { ...S, ...r }; } catch (e) {}
-if (!['pass', 'rank', 'pen'].includes(S.view)) S.view = 'pass';
+if (!['pass', 'rank', 'pen', 'piste', 'v0'].includes(S.view)) S.view = 'pass';
 if (!['T', 'H', 'F'].includes(S.gf)) S.gf = 'T';
 function persist() { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} }
 
@@ -198,7 +396,7 @@ function subscribe() {
   if (code === subCode) return;
   subs.forEach(u => { try { u(); } catch (e) {} }); subs = [];
   if (boardSub) { try { boardSub(); } catch (e) {} boardSub = null; }
-  subCode = code; devStatus = null; B = null; trk = null;
+  subCode = code; devStatus = null; B = null; trk = null; unsubTrace();
   if (!code) return;
   let autoAsk = false;
   const { fs, doc, onSnapshot } = window.FB;
@@ -206,11 +404,11 @@ function subscribe() {
     devStatus = snap.exists() ? snap.data().status : 'gone';
     // déclaration absente (nouvelle identité du téléphone après mise à jour) : nouvelle demande, à accepter par le PC course
     if (!snap.exists() && !snap.metadata.fromCache && !autoAsk) { autoAsk = true; const now = new Date().toISOString(); window.FB.setDoc(window.FB.doc(window.FB.fs, 'events', code, 'devices', fbUser.uid), { uid: fbUser.uid, poste: 'DC', role: 'dc', fn: S.fn, who: S.who, status: 'pending', at: now, seenAt: now }).catch(() => {}); }
-    if (devStatus === 'ok') subBoard(); else if (boardSub && devStatus !== 'ok' && !snap.metadata.fromCache) { boardSub(); boardSub = null; B = null; }
+    if (devStatus === 'ok') { subBoard(); subTrace(); } else if (boardSub && devStatus !== 'ok' && !snap.metadata.fromCache) { boardSub(); boardSub = null; B = null; unsubTrace(); }
     render();
   }, () => {}));
   subs.push(onSnapshot(doc(fs, 'events', code), snap => { if (snap.exists()) { const n = (snap.data() || {}).name || ''; if (n && n !== S.name) { S.name = n; persist(); render(); } } }, () => {}));
-  subs.push(onSnapshot(doc(fs, 'events', code, 'public', 'track'), snap => { trk = snap.exists() ? (snap.data() || {}) : null; if (trk) trk.gotAt = Date.now(); render(); }, () => {}));
+  subs.push(onSnapshot(doc(fs, 'events', code, 'public', 'track'), snap => { trk = snap.exists() ? (snap.data() || {}) : null; if (trk) { trk.gotAt = Date.now(); trk._got = trk.gotAt; } if (S.view !== 'v0') render(); }, () => {}));
 }
 function subBoard() {
   if (boardSub || !subCode) return;
@@ -258,9 +456,229 @@ function cellHTML(c, i) {
   }
 }
 
+/* ---------------- e-Trace : suivi des voitures en piste (onglet Piste) ---------------- */
+let TR = new Map(), trSub = null, refSub = null, evCfgSub = null, refDoc = null, refPr = null, ETC = ET.cfg(null), seenAck = '';
+function subTrace() {
+  if (trSub || !subCode) return;
+  const { fs, doc, collection, onSnapshot } = window.FB;
+  trSub = onSnapshot(collection(fs, 'events', subCode, 'trace'), snap => {
+    const now = Date.now();
+    snap.docChanges().forEach(ch => { if (ch.type === 'removed') TR.delete(ch.doc.id); else TR.set(ch.doc.id, { ...ch.doc.data(), _got: now }); });
+    if (S.view !== 'v0') render();
+  }, () => { trSub = null; });
+  refSub = onSnapshot(doc(fs, 'events', subCode, 'ref', 'track'), snap => { refDoc = snap.exists() ? snap.data() : null; refPr = ET.prep(refDoc); if (S.view !== 'v0' || V.st === 'idle') render(); }, () => { refSub = null; });
+  evCfgSub = onSnapshot(doc(fs, 'events', subCode), snap => { ETC = ET.cfg(snap.exists() ? snap.data() : null); }, () => {});
+}
+function unsubTrace() { [trSub, refSub, evCfgSub].forEach(u => { try { u && u(); } catch (e) {} }); trSub = refSub = evCfgSub = null; TR = new Map(); refDoc = null; refPr = null; }
+// téléphone e-Trace du pilote n° bib (le plus récent s'il y en a plusieurs)
+function traceOf(bib) { let b = null; for (const t of TR.values()) if (String(t.bib) === String(bib) && (!b || (t.t || 0) > (b.t || 0))) b = t; return b; }
+function alertNow() {
+  const run = trackRun();
+  if (!run) return null;
+  const T = traceOf(run), a = ET.alertState(trk, T, refPr, ETC);
+  return a ? { ...a, bib: run, T, key: run + '|' + trk.startAt } : null;
+}
+function alertText(a) {
+  const where = a.T && refPr && Number.isFinite(a.T.d) ? ET.where(refPr, a.T.d) : '';
+  if (a.lvl === 'lost') return { t: 'Position perdue', s: `aucune position depuis ${a.age || '?'} s${where ? ' · dernière : ' + where : ''}` };
+  if (a.lvl === 'red') return { t: `Arrêt prolongé · ${a.dur} s`, s: where || 'position sur le plan' };
+  if (a.lvl === 'orange') return { t: `Arrêté depuis ${a.dur} s`, s: where || 'position sur le plan' };
+  return null;
+}
+function alertBanner() {
+  const a = alertNow();
+  if (!a || !['orange', 'red', 'lost'].includes(a.lvl) || seenAck === a.key + '|' + a.lvl) return '';
+  const x = alertText(a), c = ET.COL[a.lvl];
+  return `<div class="etb" style="--c:${c}"><b class="etn">${esc(a.bib)}</b><span><b>${esc(x.t)}</b><small>${esc(x.s)}</small></span><span class="etbtn"><button onclick="setView('piste')">Plan</button><button onclick="ackAlert()">Vu</button></span></div>`;
+}
+function ackAlert() { const a = alertNow(); if (a) seenAck = a.key + '|' + a.lvl; render(); }
+function pisteHTML() {
+  const run = trackRun(), a = alertNow(), now = Date.now();
+  let head;
+  if (!run) head = `<div class="etcard"><b class="etbig">Piste libre</b><small>Le suivi démarre seul au départ chronométré du pilote suivant.</small></div>`;
+  else if (a && a.lvl === 'none') head = `<div class="etcard"><b class="etbig">En piste : n° ${esc(run)} ${esc(lastName(trk.name))}</b><small>Ce pilote n'a pas e-Trace : pas de suivi de position.</small></div>`;
+  else if (a && alertText(a)) { const x = alertText(a); head = `<div class="etcard al" style="--c:${ET.COL[a.lvl]}"><b class="etn">${esc(run)}</b><span><b class="etbig">${esc(x.t)}</b><small>${esc(x.s)}</small></span></div>`; }
+  else head = `<div class="etcard"><b class="etbig" style="color:${ET.COL.ok}">En piste : n° ${esc(run)} ${esc(lastName(trk.name))}</b><small>Suivi actif${a && a.T && refPr && Number.isFinite(a.T.d) ? ' · ' + esc(ET.where(refPr, a.T.d)) : ''}</small></div>`;
+  const dots = [];
+  if (run && a && a.T) dots.push({ lat: a.T.lat, lng: a.T.lng, color: ET.COL[a.lvl] || ET.COL.ok, label: 'N° ' + run, pulse: a.lvl !== 'ok' });
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const th = dark ? { road: '#2a4252', ink: '#eaf4f6', muted: '#9fb6c2', bg: '#12232f', chrono: '#5b9bf0', mark: '#3d7cc9' } : {};
+  const T = run && a ? a.T : null;
+  const rowsH = T ? `<div class="etrows"><div><span>Dernière position</span><b>il y a ${Math.max(0, Math.round((now - T._got) / 1000 + (T.fa || 0)))} s · ± ${esc(T.acc)} m</b></div><div><span>Vitesse</span><b>${T.spd == null ? '—' : String(Math.round(T.spd * 3.6)) + ' km/h'}</b></div><div><span>Arrêt prolongé</span><b style="color:${ET.COL.red}">bandeau rouge à ${ETC.red} s</b></div></div>` : '';
+  const phones = [...TR.values()].sort((x, y) => (+x.bib || 0) - (+y.bib || 0)).map(t => {
+    const age = Math.round((now - t._got) / 1000 + (t.fa || 0)), on = age <= ETC.slow + 20;
+    return `<span class="etph ${on ? '' : 'off'}">n° ${esc(t.bib)} ${on ? '✓' : '· ' + (age > 3600 ? 'hors ligne' : age + ' s')}</span>`;
+  }).join('');
+  return head + `<div class="etplan">${ET.svg(refPr, dots, th)}</div>` + rowsH
+    + `<div class="sect">Téléphones e-Trace <small>${TR.size} pilote(s) volontaire(s)</small></div><div class="etphs">${phones || '<span class="wait">Aucun téléphone e-Trace accepté pour cette épreuve.</span>'}</div>`
+    + `<p class="hint">Orange dès ${ETC.orange} s d'arrêt · rouge à ${ETC.red} s · violet si position perdue (${ETC.lost} s sans donnée). Aucune sonnerie.</p>`;
+}
+
+/* ---------------- Voiture 0 : enregistrement du tracé de référence ---------------- */
+const V0K = 'asat_dc_v0';
+let V = { st: 'idle', fixes: [], marks: [], t0: 0, tracks: null, msg: '', name: '', built: null, names: {} };
+try { const r = JSON.parse(localStorage.getItem(V0K) || 'null'); if (r && typeof r === 'object' && ['rec', 'review'].includes(r.st)) V = { ...V, ...r, tracks: null, msg: '' }; } catch (e) {}
+function v0save() { try { localStorage.setItem(V0K, JSON.stringify({ st: V.st, fixes: V.fixes, marks: V.marks, t0: V.t0, name: V.name, built: V.built, names: V.names })); } catch (e) {} }
+let v0watch = null, v0wake = null, v0acc = null, v0err = '';
+function v0gps() {
+  const want = V.st === 'rec' && document.visibilityState === 'visible' && 'geolocation' in navigator;
+  if (want && v0watch === null) v0watch = navigator.geolocation.watchPosition(p => {
+    v0err = ''; v0acc = p.coords.accuracy;
+    const f = { t: p.timestamp || Date.now(), lat: p.coords.latitude, lng: p.coords.longitude, acc: Math.round(p.coords.accuracy) };
+    const l = V.fixes[V.fixes.length - 1];
+    if (!l || f.t - l.t >= 900) { V.fixes.push(f); v0save(); }
+    v0light();
+  }, e => { v0err = e.code === 1 ? 'Localisation refusée : autorisez-la pour e-DC dans les réglages du téléphone.' : 'GPS indisponible pour le moment.'; v0light(); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 });
+  else if (!want && v0watch !== null) { navigator.geolocation.clearWatch(v0watch); v0watch = null; }
+  if (V.st === 'rec' && document.visibilityState === 'visible' && 'wakeLock' in navigator && !v0wake) navigator.wakeLock.request('screen').then(w => { v0wake = w; w.addEventListener('release', () => { v0wake = null; }); }).catch(() => {});
+  if (V.st !== 'rec' && v0wake) { v0wake.release().catch(() => {}); v0wake = null; }
+}
+document.addEventListener('visibilitychange', () => v0gps());
+function v0start() { V = { ...V, st: 'rec', fixes: [], marks: [], t0: Date.now(), built: null, names: {}, msg: '' }; v0save(); v0gps(); render(); }
+function v0mark(k) {
+  const t = V.fixes.length ? V.fixes[V.fixes.length - 1].t : Date.now();
+  if (k === 'dep' && V.marks.some(m => m.k === 'dep')) return;
+  if (k === 'arr' && (!V.marks.some(m => m.k === 'dep') || V.marks.some(m => m.k === 'arr'))) return;
+  if (k === 'pd' && V.marks.some(m => m.k === 'pd')) return;
+  V.marks.push({ k, t }); v0save();
+  if (navigator.vibrate) navigator.vibrate(60);
+  render();
+}
+function v0stop() {
+  if (!confirm('Arrêter l\'enregistrement ? Le tracé sera affiché pour vérification.')) return;
+  const marks = V.marks.slice();
+  if (V.fixes.length) {
+    // parc fermé départ = premier point, parc fermé arrivée = dernier point (si des liaisons ont été enregistrées)
+    const dep = marks.find(m => m.k === 'dep'), arr = marks.find(m => m.k === 'arr');
+    if (dep && dep.t - V.fixes[0].t > 3000) marks.unshift({ k: 'pd', t: V.fixes[0].t });
+    if (arr && V.fixes[V.fixes.length - 1].t - arr.t > 3000) marks.push({ k: 'pa', t: V.fixes[V.fixes.length - 1].t });
+    if (!dep) marks.unshift({ k: 'dep', t: V.fixes[0].t });
+    if (!arr) marks.push({ k: 'arr', t: V.fixes[V.fixes.length - 1].t });
+  }
+  V.built = ET.build(V.fixes, marks, 35);
+  V.st = 'review'; V.msg = V.built ? '' : 'Pas assez de points GPS pour construire le tracé.'; v0save(); v0gps(); render();
+}
+function v0restart() { if (!confirm('Recommencer ? L\'enregistrement affiché sera perdu.')) return; V.st = 'idle'; V.fixes = []; V.marks = []; V.built = null; V.names = {}; v0save(); render(); }
+function v0setName(i, v) { V.names[i] = v; v0save(); }
+function v0gpx(inp) {
+  const f = inp.files && inp.files[0]; if (!f) return;
+  f.text().then(t => { const b = ET.fromGpx(t); if (!b) { V.msg = 'Fichier GPX illisible ou sans points.'; render(); return; } V.built = b; V.st = 'review'; V.names = {}; V.name = V.name || f.name.replace(/\.gpx$/i, ''); V.msg = ''; v0save(); render(); });
+}
+const slug = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'trace';
+function v0ref() {
+  if (!V.built) return null;
+  let c = 0;
+  const marks = V.built.marks.map((m, j) => ({ k: m.k, name: m.k === 'pt' ? (c++, String(V.names[j] || '').trim() || 'Chicane ' + c) : '', i: m.i }));
+  return { name: String(V.name || '').trim(), pts: V.built.pts, marks };
+}
+async function v0validate() {
+  const r = v0ref(), nm = document.getElementById('v0name'); if (nm) V.name = nm.value;
+  r.name = String(V.name || '').trim();
+  if (!r.name) { V.msg = 'Donnez un nom au tracé (lieu de l\'épreuve), par ex. « Papenoo · course de côte ».'; render(); return; }
+  const pr = ET.prep(r), now = new Date().toISOString();
+  const body = { ...r, L: Math.round(pr.L), at: now, by: S.who || FN[S.fn], src: V.fixes.length ? 'voiture0' : 'gpx', event: S.code };
+  const { fs, doc, setDoc } = window.FB;
+  V.msg = 'Enregistrement…'; render();
+  try {
+    await setDoc(doc(fs, 'events', S.code, 'ref', 'track'), body);
+    await setDoc(doc(fs, 'tracks', slug(r.name)), body).catch(() => {});
+    V = { ...V, st: 'idle', fixes: [], marks: [], built: null, names: {}, msg: '✔ Tracé de référence enregistré pour l\'épreuve.' }; v0save();
+  } catch (e) { V.msg = e && e.code === 'permission-denied' ? 'Enregistrement refusé : ce téléphone doit être accepté par le PC course comme Directeur de course (et les règles e-Trace publiées).' : 'Enregistrement impossible (réseau ?). Réessayez.'; }
+  render();
+}
+async function v0list() {
+  const { fs, collection, getDocs } = window.FB;
+  V.msg = 'Chargement…'; render();
+  try { const q = await getDocs(collection(fs, 'tracks')); V.tracks = q.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => String(b.at).localeCompare(String(a.at))); V.msg = V.tracks.length ? '' : 'Aucun tracé enregistré pour le moment.'; }
+  catch (e) { V.msg = 'Liste indisponible (réseau ou règles).'; }
+  render();
+}
+async function v0use(id) {
+  const t = (V.tracks || []).find(x => x.id === id); if (!t) return;
+  if (!confirm(`Utiliser « ${t.name} » comme tracé de référence de cette épreuve ?`)) return;
+  const { fs, doc, setDoc } = window.FB;
+  try { await setDoc(doc(fs, 'events', S.code, 'ref', 'track'), { name: t.name, pts: t.pts, marks: t.marks, L: t.L || null, at: new Date().toISOString(), by: S.who || FN[S.fn], src: 'bibliothèque', event: S.code }); V.tracks = null; V.msg = '✔ Tracé « ' + t.name + ' » retenu pour l\'épreuve.'; }
+  catch (e) { V.msg = 'Enregistrement refusé : ce téléphone doit être accepté comme Directeur de course.'; }
+  render();
+}
+const mmss = s => `${Math.floor(s / 60)}:${pad(Math.floor(s % 60))}`;
+function v0len(f) { let d = 0; for (let j = 1; j < f.length; j++) d += ET.dist(f[j - 1].lat, f[j - 1].lng, f[j].lat, f[j].lng); return d; }
+function v0preview() {
+  if (V.fixes.length < 2) return null;
+  const pts = []; V.fixes.forEach(f => pts.push(f.lat, f.lng));
+  const marks = V.marks.map(m => { let bi = 0, bd = Infinity; V.fixes.forEach((f, j) => { const d = Math.abs(f.t - m.t); if (d < bd) { bd = d; bi = j; } }); return { k: m.k, i: bi }; });
+  if (!marks.some(m => m.k === 'dep')) marks.push({ k: 'dep', i: V.fixes.length - 1 });
+  return ET.prep({ pts, marks });
+}
+function v0HTML() {
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const th = dark ? { road: '#2a4252', ink: '#eaf4f6', muted: '#9fb6c2', bg: '#12232f', chrono: '#5b9bf0', mark: '#3d7cc9' } : {};
+  const msg = V.msg ? `<div class="banner">${esc(V.msg)}</div>` : '';
+  if (V.st === 'rec') {
+    const has = k => V.marks.some(m => m.k === k), el = (Date.now() - V.t0) / 1000, last = V.fixes[V.fixes.length - 1];
+    const chip = (t, st) => `<span class="v0chip ${st}">${t}</span>`;
+    const stage = has('arr') ? 4 : has('dep') ? 2 : 0;
+    const npt = V.marks.filter(m => m.k === 'pt').length, depT = (V.marks.find(m => m.k === 'dep') || {}).t;
+    const pr = v0preview();
+    return msg + `<div class="v0rec"><span class="recdot"></span><b>Enregistrement</b><b id="v0el" class="v0el">${mmss(el)}</b></div>
+      <div class="v0chips">${chip('Parc départ', 'ok')}›${chip(has('dep') ? 'Départ ✓' : 'Départ', stage >= 2 ? 'ok' : 'cur')}›${chip('Chronométré', stage === 2 ? 'cur' : stage > 2 ? 'ok' : '')}›${chip(has('arr') ? 'Arrivée ✓' : 'Arrivée', stage > 2 ? 'ok' : '')}›${chip('Parc arrivée', stage > 2 ? 'cur' : '')}</div>
+      <div class="v0tiles"><div><small>Distance</small><b id="v0d">${ET.km(v0len(V.fixes))}</b></div><div><small>GPS</small><b id="v0a" style="color:${v0acc != null && v0acc <= 10 ? 'var(--best)' : 'var(--warn)'}">${v0acc != null ? '± ' + Math.round(v0acc) + ' m' : '…'}</b></div><div><small>Points</small><b id="v0n">${V.fixes.length}</b></div></div>
+      <div class="etplan" id="v0plan">${pr ? ET.svg(pr, last ? [{ lat: last.lat, lng: last.lng, color: '#d23b2f', pulse: true }] : [], th) : '<div class="empty">Le tracé apparaît après quelques secondes de route.</div>'}</div>
+      ${v0err ? `<div class="banner">${esc(v0err)}</div>` : ''}
+      <div class="hint">${npt ? `${npt} point(s) marqué(s)` : 'Marquez chaque chicane à son passage.'}${depT ? '' : ' · Touchez « Départ » sur la ligne de départ.'}</div>
+      <button class="v0big" onclick="v0mark('pt')">+ Marquer un point</button>
+      <div class="v0two"><button class="v0b ${has('dep') ? 'done' : ''}" onclick="v0mark('dep')" ${has('dep') ? 'disabled' : ''}>${has('dep') ? `✓ Départ<small>marqué à ${mmss((depT - V.t0) / 1000)}</small>` : 'Départ'}</button>
+      <button class="v0b ${has('arr') ? 'done' : ''}" onclick="v0mark('arr')" ${!has('dep') || has('arr') ? 'disabled' : ''}>${has('arr') ? '✓ Arrivée' : 'Arrivée'}</button></div>
+      <button class="v0stop" onclick="v0stop()">■ Arrêter l'enregistrement</button>
+      <p class="hint" style="text-align:center">Commencer au parc fermé départ · arrêter au parc fermé arrivée · fonctionne sans réseau</p>`;
+  }
+  if (V.st === 'review') {
+    if (!V.built) return msg + `<button class="btn" onclick="V.st='idle';v0save();render()">Retour</button>`;
+    const r = v0ref(), pr = ET.prep(r);
+    const liai = pr.cum[pr.iDep] + (pr.cum[pr.n - 1] - pr.cum[pr.iArr]);
+    let c = 0;
+    const lines = V.built.marks.map((m, j) => {
+      const s = pr.cum[m.i] - pr.c0, d = s < 0 ? '− ' + ET.km(s) : s > pr.L + 1 ? '+ ' + ET.km(s - pr.L) : ET.km(s);
+      if (m.k === 'pt') { c++; return `<div class="v0l"><span class="v0c">C${c}</span><input type="text" value="${esc(V.names[j] || 'Chicane ' + c)}" oninput="v0setName(${j}, this.value)" aria-label="Nom du point ${c}"><span>${d}</span></div>`; }
+      const lab = { pd: 'Parc fermé départ', dep: '<b>Ligne de départ</b>', arr: '<b>Ligne d\'arrivée</b>', pa: 'Parc fermé arrivée' }[m.k];
+      return `<div class="v0l"><span class="v0c ${m.k === 'pd' || m.k === 'pa' ? 'sq' : 'ln'}"></span><span class="v0n">${lab}</span><span>${m.k === 'pa' ? '+ ' + ET.km(s - pr.L) : d}</span></div>`;
+    }).join('');
+    const st = V.built.stats || {};
+    return msg + `<div class="sect">Tracé enregistré · à vérifier</div><div class="etplan">${ET.svg(pr, [], th)}</div>
+      <div class="hint">Parcours chronométré <b>${ET.km(pr.L)}</b> · liaisons ${ET.km(liai)}${st.dur ? ' · durée ' + mmss(st.dur) : ''}${st.acc ? ' · précision moyenne ± ' + Math.round(st.acc) + ' m' : ''}</div>
+      <div class="card"><div class="label">Repères · noms modifiables · distance depuis le départ</div>${lines}</div>
+      <label>Nom du tracé (lieu)<input type="text" id="v0name" value="${esc(V.name || S.name || '')}" oninput="V.name=this.value;v0save()" placeholder="ex. Papenoo · course de côte"></label>
+      ${refDoc ? `<p class="hint">Remplacera le tracé de référence actuel de l'épreuve (« ${esc(refDoc.name || '')} »).</p>` : ''}
+      <div class="v0two"><button class="v0b ghost" onclick="v0restart()">Recommencer</button><button class="v0b ok" onclick="v0validate()">Valider le tracé</button></div>`;
+  }
+  // repos
+  const cur = refDoc ? `<div class="card"><div class="label">Tracé de référence de l'épreuve</div><b>${esc(refDoc.name || 'Sans nom')}</b><span class="hint">${refPr ? ET.km(refPr.L) + ' chronométrés · ' + refPr.marks.filter(m => m.k === 'pt').length + ' point(s) marqué(s)' : ''}${refDoc.at ? ' · enregistré le ' + new Date(refDoc.at).toLocaleDateString('fr-FR') : ''}</span><div class="etplan">${ET.svg(refPr, [], th)}</div></div>`
+    : `<div class="card"><div class="label">Tracé de référence de l'épreuve</div><span class="hint">Aucun pour le moment. Enregistrez-le pendant l'inspection du tracé, ou reprenez un tracé déjà enregistré sur ce lieu.</span></div>`;
+  const lib = V.tracks ? `<div class="card"><div class="label">Tracés enregistrés</div>${V.tracks.map(t => `<button class="v0lib" onclick="v0use('${esc(t.id)}')"><b>${esc(t.name || t.id)}</b><small>${t.L ? ET.km(t.L) : ''}${t.at ? ' · ' + new Date(t.at).toLocaleDateString('fr-FR') : ''}</small></button>`).join('') || '<span class="hint">Aucun.</span>'}</div>` : '';
+  return msg + cur + `<button class="v0big" onclick="v0start()">● Commencer l'enregistrement</button>
+    <p class="hint">À lancer au parc fermé départ, téléphone fixé dans la Voiture 0. Pendant le passage : « Départ » sur la ligne, « + Marquer un point » à chaque chicane, « Arrivée » sur la ligne, puis « Arrêter » au parc fermé arrivée.</p>
+    <div class="v0two"><button class="v0b ghost" onclick="v0list()">Reprendre un tracé enregistré</button><label class="v0b ghost" style="display:flex;align-items:center;justify-content:center;cursor:pointer">Importer un GPX<input type="file" accept=".gpx,application/gpx+xml" onchange="v0gpx(this)" hidden></label></div>${lib}`;
+}
+function v0light() {
+  if (S.view !== 'v0' || V.st !== 'rec') return;
+  const set = (id, t) => { const e = document.getElementById(id); if (e) e.textContent = t; };
+  set('v0el', mmss((Date.now() - V.t0) / 1000)); set('v0d', ET.km(v0len(V.fixes))); set('v0n', String(V.fixes.length));
+  const a = document.getElementById('v0a'); if (a && v0acc != null) { a.textContent = '± ' + Math.round(v0acc) + ' m'; a.style.color = v0acc <= 10 ? 'var(--best)' : 'var(--warn)'; }
+  const p = document.getElementById('v0plan'), pr = v0preview(), last = V.fixes[V.fixes.length - 1];
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  if (p && pr) p.innerHTML = ET.svg(pr, last ? [{ lat: last.lat, lng: last.lng, color: '#d23b2f', pulse: true }] : [], dark ? { road: '#2a4252', ink: '#eaf4f6', muted: '#9fb6c2', bg: '#12232f', chrono: '#5b9bf0', mark: '#3d7cc9' } : {});
+}
+let lastAlertSig = '';
+setInterval(() => {
+  if (S.view === 'v0') { v0light(); return; }
+  const a = alertNow(), sig = a ? a.key + a.lvl + (a.dur || '') + (a.age || '') : '';
+  if (S.view === 'piste' || sig !== lastAlertSig) { lastAlertSig = sig; render(); }
+}, 1000);
+v0gps();
+
 /* ---------------- Affichage ---------------- */
 function headTop() {
-  return `<div class="top"><h3><span class="flagmark" aria-hidden="true"></span><span><span style="text-transform:none">e-DC</span><small>${esc(S.name || (B && B.name) || (S.code ? 'Épreuve ' + S.code : 'Directeur de course'))}</small></span></h3><span class="ro">🔒 Lecture seule</span></div>`;
+  return `<div class="top"><h3><span class="flagmark" aria-hidden="true"></span><span><span style="text-transform:none">e-DC</span><small>${esc(S.name || (B && B.name) || (S.code ? 'Épreuve ' + S.code : 'Directeur de course'))}</small></span></h3><span class="ro">${S.view === 'v0' ? '📍 Voiture 0' : '🔒 Lecture seule'}</span></div>`;
 }
 function statusHTML() {
   const off = !navigator.onLine || boardCache;
@@ -289,7 +707,8 @@ function elapsed() { const s = Math.max(0, Math.floor((Date.now() - Number(trk &
 function viewsHTML() {
   const b = (k, l, extra = '') => `<button aria-pressed="${S.view === k}" onclick="setView('${k}')">${l}${extra}</button>`;
   const n = activeInfr().length;
-  return `<div class="views" role="group" aria-label="Vue">${b('pass', 'Passage')}${b('rank', 'Classement')}${b('pen', 'Pénalités', n ? `<span class="cnt">${n}</span>` : '')}</div>`;
+  const a = alertNow(), ad = a && ET.COL[a.lvl] && a.lvl !== 'ok' ? `<span class="adot" style="background:${ET.COL[a.lvl]}"></span>` : '';
+  return `<div class="views" role="group" aria-label="Vue">${b('pass', 'Passage')}${b('rank', 'Classement')}${b('pen', 'Pénalités', n ? `<span class="cnt">${n}</span>` : '')}${b('piste', 'Piste', ad)}${b('v0', 'Voiture 0')}</div>`;
 }
 function tableHTML(mode) {
   const heads = Array.isArray(B.heads) ? B.heads : [], nE = Number(B.nE) || 0, run = runSet();
@@ -341,7 +760,7 @@ function render() {
       app.className = 'form';
       app.innerHTML = headTop() + `<div class="card">
         <h3 style="font-size:1.2rem;text-transform:uppercase">Rejoindre l'épreuve</h3>
-        <p class="hint">Écran du Directeur de course : temps, classement et pénalités en direct, sans aucune modification possible. Le PC course doit accepter ce téléphone.</p>
+        <p class="hint">Écran du Directeur de course : temps, classement, pénalités et suivi e-Trace en direct ; onglet « Voiture 0 » pour enregistrer le tracé. Le PC course doit accepter ce téléphone.</p>
         <label>Code de l'épreuve<input type="text" id="code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ex. TIAREI-3813"></label>
         <label>Votre fonction<select id="fn">${Object.entries(FN).map(([k, v]) => `<option value="${k}" ${S.fn === k ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
         <label>Votre nom<input type="text" id="who" autocomplete="name" value="${esc(S.who)}" placeholder="ex. Teva Mauri"></label>
@@ -363,9 +782,10 @@ function render() {
   }
   app.className = '';
   const warn = devStatus && devStatus !== 'ok' && devStatus !== null ? `<div class="banner">${devStatus === 'pending' ? 'En attente de validation par le PC course : données affichées de la dernière connexion.' : 'Ce téléphone n\'est plus accepté par le PC course : données figées.'}</div>` : '';
-  const body = !B ? '<div class="empty">En attente des données du PC course…<br>Le tableau apparaîtra dès que PC course aura publié l\'épreuve.</div>'
+  const body = S.view === 'piste' ? pisteHTML() : S.view === 'v0' ? v0HTML() : !B ? '<div class="empty">En attente des données du PC course…<br>Le tableau apparaîtra dès que PC course aura publié l\'épreuve.</div>'
     : S.view === 'pen' ? pensHTML() : tableHTML(S.view);
-  app.innerHTML = headTop() + statusHTML() + viewsHTML() + `<div class="scroll">${warn}${body}${footHTML()}</div>`;
+  const al = S.view === 'piste' || S.view === 'v0' ? '' : alertBanner();
+  app.innerHTML = headTop() + statusHTML() + viewsHTML() + `<div class="scroll">${al}${warn}${body}${footHTML()}</div>`;
   const sc2 = app.querySelector('.scroll'); if (sc2) { sc2.scrollTop = y; const tw = sc2.querySelector('.tw'); if (tw) tw.scrollLeft = x; }
 }
 async function rejoin() {
@@ -376,7 +796,7 @@ async function rejoin() {
   else alert('Le PC course doit retirer le refus : dans PC course, touchez « Accepter » sur la ligne « Directeur de course ».');
 }
 function setGf(v) { S.gf = v; persist(); render(); }
-function setView(v) { S.view = v; persist(); render(); const sc = document.querySelector('.scroll'); if (sc) sc.scrollTop = 0; }
+function setView(v) { if (S.view === 'v0' && v !== 'v0') V.msg = ''; S.view = v; persist(); render(); const sc = document.querySelector('.scroll'); if (sc) sc.scrollTop = 0; }
 setInterval(() => {
   const e = document.getElementById('elap'); if (e && trackRun()) e.textContent = elapsed();
   if (trk && trk.status === 'fin' && trk.gotAt && Date.now() - trk.gotAt > 12000 && Date.now() - trk.gotAt < 14000) render();
@@ -388,7 +808,7 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.se
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getAuth, onAuthStateChanged, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-  import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, getDoc, setDoc, updateDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, getDoc, getDocs, setDoc, updateDoc, onSnapshot, collection } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
   const firebaseConfig = {
     apiKey: "AIzaSyBYM6TXeceffH_8EhN7Z8OHMqqAzCMFVMI",
     authDomain: "pc-course-1f72d.firebaseapp.com",
@@ -404,7 +824,7 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.se
     let fs;
     try { fs = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) }); }
     catch (e) { fs = initializeFirestore(app, {}); }
-    window.FB = { auth, fs, doc, getDoc, setDoc, updateDoc, onSnapshot, signInAnon: () => signInAnonymously(auth) };
+    window.FB = { auth, fs, doc, getDoc, getDocs, setDoc, updateDoc, onSnapshot, collection, signInAnon: () => signInAnonymously(auth) };
     onAuthStateChanged(auth, u => window.liveAuthChanged && window.liveAuthChanged(u));
     window.liveReady && window.liveReady();
   }
