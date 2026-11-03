@@ -183,7 +183,7 @@
 const ET = (() => {
   const R = 6371008.8, rad = Math.PI / 180;
   // Réglages par défaut (modifiables plus tard par épreuve : champ « etrace » du document de l'épreuve)
-  const DEF = { fast: 2, slow: 30, vStop: 1, nStop: 2, orange: 2, red: 10, lost: 6, endGuard: 50, maxAcc: 25 };
+  const DEF = { fast: 2, slow: 30, vStop: 1, nStop: 2, orange: 2, red: 10, lost: 6, fixLost: 15, endGuard: 50, maxAcc: 25 };
   const cfg = ev => { const o = { ...DEF }, e = ev && ev.etrace; if (e && typeof e === 'object') for (const k in DEF) if (Number.isFinite(+e[k]) && +e[k] > 0) o[k] = +e[k]; return o; };
   const dist = (a1, o1, a2, o2) => { const k = Math.cos((a1 + a2) / 2 * rad); return Math.hypot((o2 - o1) * rad * R * k, (a2 - a1) * rad * R); };
 
@@ -289,9 +289,12 @@ const ET = (() => {
     if (!trk || trk.status !== 'run' || !trk.bib) return null;
     const since = (now - (trk._got || now)) / 1000;
     if (!T) return { lvl: 'none' };                     // pilote sans e-Trace : rien à surveiller
-    const age = (now - (T._got || 0)) / 1000 + (Number(T.fa) || 0);   // + âge du dernier point GPS au moment de l'envoi
+    // âge de la liaison (dernier envoi reçu). L'âge du point GPS (fa) n'est pas compté pour une voiture arrêtée :
+    // à l'arrêt, le téléphone espace ses points GPS (jusqu'à 14 s lors des essais du 02/11/2026) alors que la liaison est vivante.
+    const age = (now - (T._got || 0)) / 1000, fixAge = Number(T.fa) || 0;
+    const gpsLost = !(T.stopFor > 0) && fixAge > c.fixLost;
     const thisRun = T.armed && String(T.bib) === String(trk.bib) && Number(T.run) === Number(trk.startAt);
-    if ((age > c.lost && since > c.lost) || (!thisRun && since > c.lost + 2)) return { lvl: 'lost', age: Math.round(Math.min(age, since)) };
+    if ((age > c.lost && since > c.lost) || (!thisRun && since > c.lost + 2) || (thisRun && gpsLost)) return { lvl: 'lost', age: Math.round(gpsLost && age <= c.lost ? fixAge : Math.min(age, since)) };
     if (!thisRun) return { lvl: 'ok' };
     const nearEnd = pr && Number.isFinite(T.d) && T.d > pr.L - c.endGuard;
     const dur = T.stopFor > 0 ? T.stopFor + Math.max(0, age) : 0;
